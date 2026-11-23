@@ -31,6 +31,7 @@ import type {
   ManagedMemberCollection as MemberCollection,
   ManagedMemberViewRow as Row,
 } from "./managedMemberViewSchemas.js";
+import { retainedView } from "./viewDeclaration.js";
 
 export const MANAGED_MEMBER_SCOPE_GUIDANCE = {
   selectedNominalRows:
@@ -542,3 +543,9 @@ export const projectManagedMemberView = (
     coverage: pageViewCoverage(view.offset, page.rows.length, total),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const managedMemberViewDeclarations = retainedView({
+  operations: ["inspect_managed_members"],
+  project: projectManagedMemberView,
+});

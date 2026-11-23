@@ -20,6 +20,7 @@ import {
   completeWithinViewCoverage,
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
+import { retainedView } from "./viewDeclaration.js";
 
 /** Original metadata rows; offsets count entries in the returned parent collection. */
 export const managedViewRequestSchema = z.strictObject({
@@ -156,3 +157,9 @@ export const projectManagedArtifactView = (
     coverage: pageViewCoverage(view.offset, item.length, collection.length),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const managedArtifactViewDeclarations = retainedView({
+  operations: ["inspect_managed_artifact"],
+  project: projectManagedArtifactView,
+});

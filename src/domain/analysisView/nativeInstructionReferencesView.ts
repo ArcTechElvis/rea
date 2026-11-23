@@ -14,6 +14,7 @@ import {
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
 import { assertOwnedView, type AdmittedView } from "./analysisViewShape.js";
+import { retainedView } from "./viewDeclaration.js";
 
 export const nativeInstructionReferencesRequestSchema = z.strictObject({
   kind: z.literal("native-instruction-references"),
@@ -174,3 +175,9 @@ export const projectNativeInstructionReferencesView = (
     byte_limited: byteLimited,
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const nativeInstructionReferencesViewDeclarations = retainedView({
+  operations: ["inspect_native_instruction"],
+  project: projectNativeInstructionReferencesView,
+});

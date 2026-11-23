@@ -18,6 +18,7 @@ import {
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
 import { evidenceFileTarget, evidenceSubjectTarget } from "../evidence.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const MACHO_COLLECTIONS = [
   "entrypoints",
@@ -274,3 +275,9 @@ export const projectMachoView = (
       return ok(page("provenance", report.provenance));
   }
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const machoViewDeclarations = retainedView({
+  operations: ["inspect_macho"],
+  project: projectMachoView,
+});

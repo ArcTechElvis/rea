@@ -32,6 +32,7 @@ import {
   javascriptFactBasisSchema,
 } from "./javascriptModuleReferences.js";
 import { selectViewRows } from "./selectViewRows.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const OPERATION = "trace_application_feature" as const;
 const trace = applicationFeatureTraceResultSchema.shape;
@@ -346,3 +347,9 @@ export const projectFeatureTraceView = (
     });
   return ok(tracePage(result, view, { ...shared, ...context }));
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const featureTraceViewDeclarations = retainedView({
+  operations: ["trace_application_feature"],
+  project: projectFeatureTraceView,
+});

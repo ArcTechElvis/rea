@@ -27,6 +27,7 @@ import {
 import type { JsonValue } from "../jsonValue.js";
 import { jsonValueByteLength } from "../jsonValueByteLength.js";
 import { AnalysisResourceConstraintError } from "../analysisErrorCore.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const matchRow = nativeFunctionMatchSchema.extend({
   left_count: z.number().int().nonnegative(),
@@ -444,3 +445,9 @@ export const projectNativeFunctionMatchingView = (
     coverage: pageViewCoverage(view.offset, items.length, total),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const nativeFunctionMatchingViewDeclarations = retainedView({
+  operations: ["match_native_functions"],
+  project: projectNativeFunctionMatchingView,
+});

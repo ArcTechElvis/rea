@@ -26,6 +26,7 @@ import {
   completeWithinViewCoverage,
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const page = {
   kind: z.literal("native-procedure-references"),
@@ -389,3 +390,9 @@ export const projectNativeProcedureReferencesView = (
     ),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const nativeProcedureReferencesViewDeclarations = retainedView({
+  operations: ["procedure_references"],
+  project: projectNativeProcedureReferencesView,
+});

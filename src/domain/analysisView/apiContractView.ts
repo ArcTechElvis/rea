@@ -27,6 +27,7 @@ import {
 } from "./analysisViewCoverage.js";
 import { pickFields, selectViewRows } from "./selectViewRows.js";
 import { analysisViewInputError } from "./analysisViewErrors.js";
+import { retainedView } from "./viewDeclaration.js";
 
 export const apiContractViewContextSchema = apiContractSchema.omit({
   operations: true,
@@ -218,3 +219,9 @@ export const projectApiContractView = (
     ),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const apiContractViewDeclarations = retainedView({
+  operations: ["inspect_api_contract"],
+  project: projectApiContractView,
+});

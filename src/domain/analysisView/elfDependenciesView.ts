@@ -23,6 +23,7 @@ import {
   selectIndexedViewRows,
   selectViewRows,
 } from "./selectViewRows.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const neededRow = elfDependenciesReportSchema.shape.needed.element;
 const importRow = elfDependenciesReportSchema.shape.imports.element;
@@ -355,3 +356,9 @@ export const projectElfDependenciesView = (
       );
   }
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const elfDependenciesViewDeclarations = retainedView({
+  operations: ["inspect_elf_dependencies"],
+  project: projectElfDependenciesView,
+});

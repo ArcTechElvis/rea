@@ -36,6 +36,7 @@ import {
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
 import { evidenceFileTarget } from "../evidence.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const countsSchema = z.strictObject({
   sections: z.number().int().nonnegative(),
@@ -737,3 +738,9 @@ export const projectIl2cppMetadataView = (
     coverage: pageViewCoverage(view.offset, items.length, total),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const il2cppMetadataViewDeclarations = retainedView({
+  operations: ["inspect_il2cpp_metadata"],
+  project: projectIl2cppMetadataView,
+});

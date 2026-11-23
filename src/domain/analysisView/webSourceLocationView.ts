@@ -27,6 +27,7 @@ import {
   unavailableViewCoverage,
 } from "./analysisViewCoverage.js";
 import { analysisTextPage } from "./analysisViewText.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const DEFAULT_PAGE_BYTES = 1024 * 1024;
 const DEFAULT_MATCH_LIMIT = 64;
@@ -311,3 +312,9 @@ export const projectWebSourceLocationView = (
     ? projectSourceText(context, parsed.value.matches, view)
     : projectMatches(context, parsed.value.matches, view);
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const webSourceLocationViewDeclarations = retainedView({
+  operations: ["trace_web_source_location"],
+  project: projectWebSourceLocationView,
+});

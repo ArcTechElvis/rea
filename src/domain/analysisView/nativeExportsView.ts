@@ -24,6 +24,7 @@ import {
   selectIndexedViewRows,
   selectViewRows,
 } from "./selectViewRows.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const peRow = pe.shape.exports.element;
 const elfRow = elf.shape.exports.element;
@@ -223,3 +224,9 @@ export const projectNativeExportsView = (
     ),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const nativeExportsViewDeclarations = retainedView({
+  operations: ["inspect_native_exports"],
+  project: projectNativeExportsView,
+});

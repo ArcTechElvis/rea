@@ -25,6 +25,7 @@ import {
 import { analysisViewInputError } from "./analysisViewErrors.js";
 import { createAnalysisViewResultReader } from "./analysisViewParent.js";
 import { selectIndexedViewRows, selectViewRows } from "./selectViewRows.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const indexSchema = z.number().int().nonnegative();
 const count = z.number().int().nonnegative();
@@ -427,3 +428,9 @@ export const projectGoBinaryView = (
     ),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const goBinaryViewDeclarations = retainedView({
+  operations: ["inspect_go_binary"],
+  project: projectGoBinaryView,
+});

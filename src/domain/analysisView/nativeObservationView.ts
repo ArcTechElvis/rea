@@ -6,10 +6,12 @@ import { jsonValueSchema } from "../jsonValue.js";
 import { analysisInputErrorFromIssues } from "../inputIssueProjection.js";
 import { err, ok, type Result } from "../result.js";
 import {
+  NATIVE_OBSERVATION_OPERATIONS,
   nativeAddressListSchema,
   nativeObservationSourceSchemas,
   type NativeObservation,
 } from "../native/nativeObservation.js";
+import { retainedView } from "./viewDeclaration.js";
 import type { AnalysisViewParent } from "./analysisViewParent.js";
 import {
   assertOwnedView,
@@ -362,3 +364,9 @@ export const projectNativeObservationView = (
     ? ok({ ...observation, kind: "summary" as const, view })
     : ok({ ...observation, kind: "native-observation" as const, view });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const nativeObservationViewDeclarations = retainedView({
+  operations: [...NATIVE_OBSERVATION_OPERATIONS],
+  project: projectNativeObservationView,
+});

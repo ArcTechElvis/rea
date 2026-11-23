@@ -35,6 +35,7 @@ import {
   analysisTextPageItemSchema,
 } from "./analysisViewText.js";
 import { selectIndexedViewRows, selectViewRows } from "./selectViewRows.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const OPERATION = "batch_decompile" as const;
 
@@ -460,3 +461,9 @@ export const smallerBatchDecompileSelection = (
     ? { kind: view.kind, collection: "pseudocode", index: row.index }
     : undefined;
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const batchDecompileViewDeclarations = retainedView({
+  operations: ["batch_decompile"],
+  project: projectBatchDecompileView,
+});

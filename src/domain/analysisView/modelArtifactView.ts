@@ -34,6 +34,7 @@ import {
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
 import { evidenceFileTarget } from "../evidence.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const HEADLINE_TEXT_LIMIT = 512;
 
@@ -326,3 +327,9 @@ export const projectModelArtifactView = (
     coverage: pageViewCoverage(view.offset, paged.rows.length, paged.total),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const modelArtifactViewDeclarations = retainedView({
+  operations: ["inspect_model_artifact"],
+  project: projectModelArtifactView,
+});

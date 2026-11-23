@@ -16,6 +16,7 @@ import { analysisViewInputError } from "./analysisViewErrors.js";
 import { completeWithinViewCoverage } from "./analysisViewCoverage.js";
 import { analysisTextPage } from "./analysisViewText.js";
 import { procedurePseudocodeSelectionSchema } from "./procedurePseudocodeSchemas.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const unavailable = {
   available: false as const,
@@ -125,3 +126,9 @@ export const projectProcedurePseudocodeView = (
       })
     : page;
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const procedurePseudocodeViewDeclarations = retainedView({
+  operations: ["procedure_pseudo_code"],
+  project: projectProcedurePseudocodeView,
+});

@@ -14,6 +14,7 @@ import {
   completeWithinViewCoverage,
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const aotSchema = flutterResultSchemas.inspect_dart_aot;
 
@@ -116,3 +117,9 @@ export const projectDartAotView = (
     coverage: pageViewCoverage(view.offset, items.length, collection.length),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const dartAotViewDeclarations = retainedView({
+  operations: ["inspect_dart_aot"],
+  project: projectDartAotView,
+});

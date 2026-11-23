@@ -23,6 +23,7 @@ import {
 import { pickFields, selectViewRows } from "./selectViewRows.js";
 import { analysisViewInputError } from "./analysisViewErrors.js";
 import { err, ok } from "../result.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const page = {
   kind: z.literal("endpoint-comparison"),
@@ -231,3 +232,9 @@ export const projectEndpointComparisonView = (
     ),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const endpointComparisonViewDeclarations = retainedView({
+  operations: ["compare_static_and_observed_endpoints"],
+  project: projectEndpointComparisonView,
+});

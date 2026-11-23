@@ -32,6 +32,7 @@ import {
   analysisTextPageItemSchema,
 } from "./analysisViewText.js";
 import { evidenceSubjectTarget } from "../evidence.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const packageSchema = androidResultSchemas.inspect_android_package;
 const readReport = createAnalysisViewResultReader(packageSchema);
@@ -376,3 +377,9 @@ export const projectAndroidPackageView = (
     ? tooLarge()
     : ok(result);
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const androidPackageViewDeclarations = retainedView({
+  operations: ["inspect_android_package"],
+  project: projectAndroidPackageView,
+});

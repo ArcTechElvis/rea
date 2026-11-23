@@ -46,6 +46,7 @@ import {
   espFlashImageSummaryMetadataSchema,
   summaryRootMetadata,
 } from "./espFlashImageSummary.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const page = {
   kind: z.literal("inventory"),
@@ -594,3 +595,9 @@ const selectOccurrenceFields = (
         artifact_id: row.artifact_id,
         parent_occurrence_id: row.parent_occurrence_id,
       };
+
+/** Owner-declared view subject, folded into the registry. */
+export const artifactInventoryViewDeclarations = retainedView({
+  operations: ["inspect_artifact", "inventory_artifact"],
+  project: projectArtifactInventoryView,
+});

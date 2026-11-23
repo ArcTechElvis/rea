@@ -19,6 +19,7 @@ import {
   analysisTextPageItemSchema,
 } from "./analysisViewText.js";
 import { evidenceFileTarget } from "../evidence.js";
+import { retainedView } from "./viewDeclaration.js";
 
 /** Retained inferred candidates or exact text; offsets for text count UTF-16 code units. */
 export const evmViewRequestSchema = z.strictObject({
@@ -141,3 +142,9 @@ export const projectEvmInterfaceView = (
     ? ok({ kind: "evm" as const, view, ...page.value, ...shared })
     : page;
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const evmInterfaceViewDeclarations = retainedView({
+  operations: ["inspect_evm_interface"],
+  project: projectEvmInterfaceView,
+});

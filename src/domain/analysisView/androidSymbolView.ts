@@ -16,6 +16,7 @@ import {
 import { analysisViewInputError } from "./analysisViewErrors.js";
 import { createAnalysisViewResultReader } from "./analysisViewParent.js";
 import { evidenceSubjectTarget } from "../evidence.js";
+import { retainedView } from "./viewDeclaration.js";
 
 /** Exact requested facts; only the parent Evidence's raw protocol calls are omitted. */
 export const androidClassSummarySchema =
@@ -138,3 +139,9 @@ export const projectAndroidSymbolSummary = (
     ],
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const androidSymbolViewDeclarations = retainedView({
+  operations: ["inspect_android_class", "inspect_android_method"],
+  project: projectAndroidSymbolSummary,
+});

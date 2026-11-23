@@ -14,6 +14,7 @@ import {
   completeWithinViewCoverage,
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
+import { retainedView } from "./viewDeclaration.js";
 
 export const devicetreeViewRequestSchema = z.strictObject({
   kind: z.literal("devicetree"),
@@ -158,3 +159,9 @@ export const projectDevicetreeView = (
     coverage: pageViewCoverage(view.offset, items.length, total),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const devicetreeViewDeclarations = retainedView({
+  operations: ["inspect_devicetree"],
+  project: projectDevicetreeView,
+});

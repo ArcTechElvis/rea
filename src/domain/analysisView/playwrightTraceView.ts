@@ -33,6 +33,7 @@ import {
 import { isImmutableJsonSnapshot } from "../immutableJson.js";
 import { pickFields, selectViewRows } from "./selectViewRows.js";
 import { analysisViewInputError } from "./analysisViewErrors.js";
+import { retainedView } from "./viewDeclaration.js";
 
 export const playwrightTraceViewContextSchema = playwrightTraceSchema
   .omit({
@@ -507,3 +508,9 @@ export const projectPlaywrightTraceView = (
     ),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const playwrightTraceViewDeclarations = retainedView({
+  operations: ["inspect_playwright_trace"],
+  project: projectPlaywrightTraceView,
+});

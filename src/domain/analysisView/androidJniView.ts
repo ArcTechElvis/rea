@@ -31,6 +31,7 @@ import {
   analysisViewCoverageSchema,
 } from "./analysisViewCoverage.js";
 import { selectIndexedViewRows, selectViewRows } from "./selectViewRows.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const reportSchema = androidResultSchemas.inspect_android_jni_bindings;
 const readReport = createAnalysisViewResultReader(reportSchema);
@@ -272,3 +273,9 @@ export const projectAndroidJniView = (
     return ok(page);
   }
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const androidJniViewDeclarations = retainedView({
+  operations: ["inspect_android_jni_bindings"],
+  project: projectAndroidJniView,
+});

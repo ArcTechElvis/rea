@@ -25,6 +25,7 @@ import {
 import { pickFields, selectViewRows } from "./selectViewRows.js";
 import { ok, err } from "../result.js";
 import { evidenceFileTarget } from "../evidence.js";
+import { retainedView } from "./viewDeclaration.js";
 
 // Bound diagnostic context independently of the retained report size. Previews
 // are display values; stable file IDs select the original paths and all issues.
@@ -334,3 +335,9 @@ export const projectDesktopApplicationView = (
     ),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const desktopApplicationViewDeclarations = retainedView({
+  operations: ["inspect_desktop_application"],
+  project: projectDesktopApplicationView,
+});
