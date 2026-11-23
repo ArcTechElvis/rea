@@ -1,23 +1,9 @@
-import { projectWebSourceLocationView } from "./webSourceLocationView.js";
-import { projectNativeProcedureReferencesView } from "./nativeProcedureReferencesView.js";
-import { projectPlaywrightTraceView } from "./playwrightTraceView.js";
-import { projectApiContractView } from "./apiContractView.js";
-import {
-  isNativeObservationOperation,
-  NATIVE_OBSERVATION_OPERATIONS,
-} from "../native/nativeObservation.js";
-import { projectNativeObservationView } from "./nativeObservationView.js";
+import { isNativeObservationOperation } from "../native/nativeObservation.js";
+
 import { projectRecordedArrayView } from "./recordedArrayView.js";
-import { projectNativeInstructionReferencesView } from "./nativeInstructionReferencesView.js";
-import { projectNativeValueTraceView } from "./nativeValueTraceView.js";
-import { projectDevicetreeView } from "./devicetreeView.js";
-import { projectApkSignatureView } from "./apkSignatureView.js";
+
 import { byteEntropySchema } from "../native/byteEntropy.js";
-import { projectErlangBeamView } from "./erlangBeamView.js";
-import { projectPythonPycView } from "./pythonPycView.js";
-import { projectNugetNupkgView } from "./nugetNupkgView.js";
-import { projectNativeExportsView } from "./nativeExportsView.js";
-import { projectElfDependenciesView } from "./elfDependenciesView.js";
+
 import { projectByteEntropyView } from "./byteEntropyView.js";
 import {
   createAnalysisViewResultReader,
@@ -25,30 +11,13 @@ import {
 } from "./analysisViewParent.js";
 import { projectJavaScriptRoutesView } from "./javascriptRoutesView.js";
 import { projectWebBundleView } from "./webBundleView.js";
-import { projectSourceToBundleView } from "./sourceToBundleView.js";
-import { projectEndpointComparisonView } from "./endpointComparisonView.js";
-import { projectFeatureTraceView } from "./featureTraceView.js";
-import { projectNativeFeatureTraceView } from "./nativeFeatureTraceView.js";
-import { projectBatchDecompileView } from "./batchDecompileView.js";
-import { projectGpuCodeObjectsView } from "./gpuCodeObjectsView.js";
-import { projectModelArtifactView } from "./modelArtifactView.js";
-import { projectCommandObservationView } from "./commandObservationView.js";
-import { projectFridaSessionStatusView } from "./fridaSessionStatusView.js";
-import { projectGoBinaryView } from "./goBinaryView.js";
-import { projectRustBinaryView } from "./rustBinaryView.js";
+
 import { projectCycloneDxView } from "./cyclonedxView.js";
-import { projectNativeFunctionMatchingView } from "./nativeFunctionMatchingView.js";
-import { projectNativeInventoryView } from "./nativeInventoryView.js";
-import {
-  isNativeInventoryOperation,
-  NATIVE_INVENTORY_OPERATIONS,
-} from "../native/nativeInventory.js";
+
+import { isNativeInventoryOperation } from "../native/nativeInventory.js";
 import { ANALYSIS_EVIDENCE_PREDICATE } from "../evidence.js";
 import { NATIVE_FUNCTION_MATCHING_PREDICATE } from "../native/functionMatching.js";
 import { z } from "zod";
-import { projectBrowserScenarioView } from "./browserScenarioView.js";
-import { projectNativeLoadImageView } from "./nativeLoadImageView.js";
-import { projectDesktopApplicationView } from "./desktopApplicationView.js";
 
 import { AnalysisUnsupportedTargetError } from "../analysisErrorCore.js";
 import {
@@ -71,15 +40,9 @@ import {
   createApiSurfaceAccumulator,
   projectWebNetworkApiSurfaceView,
 } from "./webNetworkApiSurfaceView.js";
-import { projectProcedurePseudocodeView } from "./procedurePseudocodeView.js";
+
 import { projectNativeFunctionView } from "./nativeFunctionView.js";
-import { projectEvmInterfaceView } from "./evmInterfaceView.js";
-import { projectArtifactInventoryView } from "./artifactInventoryView.js";
-import { projectManagedArtifactView } from "./managedArtifactView.js";
-import { projectManagedMemberView } from "./managedMemberView.js";
-import { projectWasmArtifactView } from "./wasmArtifactView.js";
-import { projectMachoView } from "./machoView.js";
-import { projectInterfaceBuilderView } from "./interfaceBuilderView.js";
+
 import { projectWebNetworkCaptureView } from "./webNetworkCaptureView.js";
 import type { WebNetworkApiSurfaceAccumulator } from "./WebNetworkApiSurfaceAccumulator.js";
 import type { EnvironmentManifestAccumulator } from "./EnvironmentManifestAccumulator.js";
@@ -95,13 +58,10 @@ import {
 } from "./environmentStateView.js";
 import { projectEnvironmentCoverageView } from "./environmentCoverageView.js";
 import { projectPcapCaptureView } from "./pcapCaptureView.js";
-import { projectAndroidPackageView } from "./androidPackageView.js";
-import { projectAndroidSymbolSummary } from "./androidSymbolView.js";
-import { projectAndroidJniView } from "./androidJniView.js";
-import { projectDartAotView } from "./dartAotView.js";
-import { projectIl2cppMetadataView } from "./il2cppMetadataView.js";
 
 import type { AnalysisViewParent } from "./analysisViewParent.js";
+import { DECLARED_VIEWS } from "./viewDeclarations.js";
+import { foldViewDeclarations } from "./viewRegistry.js";
 import type { GroupingViewKind } from "./analysisViewShape.js";
 import type { AnalysisViewRequest } from "./analysisViewRequest.js";
 import {
@@ -169,74 +129,26 @@ const sealProjected = (
 ): Result<AnalysisViewResult, AnalysisError> =>
   projected.ok ? ok(sealAnalysisView(projected.value)) : projected;
 
+/**
+ * Every operation-keyed projector, folded from the declarations each view module
+ * owns. A duplicate operation throws here at module load instead of the silent
+ * last-write-wins a literal `new Map([...])` would give.
+ */
+const viewRoutes = foldViewDeclarations(DECLARED_VIEWS);
+
 /** Named source owners for views that need no extra decoder or accumulator. */
 type RetainedViewProjector = (
   parent: AnalysisViewParent,
   view: AnalysisViewRequest,
 ) => Result<UnsignedAnalysisView, AnalysisError>;
 
-/** Register a projector whose inferred result must be in the result union. */
-const retain = (
-  operation: string,
-  project: RetainedViewProjector,
-): readonly [string, RetainedViewProjector] => [operation, project];
-
-const retainedViewProjectors = new Map<string, RetainedViewProjector>([
-  retain("procedure_pseudo_code", projectProcedurePseudocodeView),
-  retain("inspect_native_instruction", projectNativeInstructionReferencesView),
-  retain("trace_feature", projectNativeFeatureTraceView),
-  ...NATIVE_OBSERVATION_OPERATIONS.map((operation) =>
-    retain(operation, projectNativeObservationView),
+const retainedViewProjectors = new Map<string, RetainedViewProjector>(
+  [...viewRoutes.byOperation].flatMap(([operation, route]) =>
+    route.project === undefined
+      ? []
+      : [[operation, route.project as RetainedViewProjector] as const],
   ),
-  retain("procedure_references", projectNativeProcedureReferencesView),
-  retain("trace_native_values", projectNativeValueTraceView),
-  retain("inspect_erlang_beam", projectErlangBeamView),
-  retain("inspect_devicetree", projectDevicetreeView),
-  retain("inspect_native_exports", projectNativeExportsView),
-  retain("inspect_elf_dependencies", projectElfDependenciesView),
-  retain("inspect_native_load_image", projectNativeLoadImageView),
-  retain("inspect_python_pyc", projectPythonPycView),
-  retain("inspect_nuget_nupkg", projectNugetNupkgView),
-  retain("frida_session_status", projectFridaSessionStatusView),
-  retain("gdb_console", projectCommandObservationView),
-  retain("inspect_with_objdump", projectCommandObservationView),
-  retain("inspect_go_binary", projectGoBinaryView),
-  retain("inspect_rust_binary", projectRustBinaryView),
-  ...NATIVE_INVENTORY_OPERATIONS.map((operation) =>
-    retain(operation, projectNativeInventoryView),
-  ),
-  retain("inspect_desktop_application", projectDesktopApplicationView),
-  retain("inspect_wasm_artifact", projectWasmArtifactView),
-  retain("inspect_macho", projectMachoView),
-  retain("decode_interface_builder", projectInterfaceBuilderView),
-  retain("inspect_evm_interface", projectEvmInterfaceView),
-  retain("inspect_managed_artifact", projectManagedArtifactView),
-  retain("inspect_managed_members", projectManagedMemberView),
-  retain("inspect_android_package", projectAndroidPackageView),
-  retain("inspect_android_class", projectAndroidSymbolSummary),
-  retain("inspect_android_method", projectAndroidSymbolSummary),
-  retain("inspect_android_jni_bindings", projectAndroidJniView),
-  retain("capture_browser_scenario", projectBrowserScenarioView),
-  retain("inspect_dart_aot", projectDartAotView),
-  retain("inspect_il2cpp_metadata", projectIl2cppMetadataView),
-  retain("inspect_apk_signature", projectApkSignatureView),
-  retain("inspect_model_artifact", projectModelArtifactView),
-  retain("inspect_gpu_code_objects", projectGpuCodeObjectsView),
-  retain("match_native_functions", projectNativeFunctionMatchingView),
-  retain("compare_source_to_bundle", projectSourceToBundleView),
-  retain("inspect_api_contract", projectApiContractView),
-  retain("inspect_playwright_trace", projectPlaywrightTraceView),
-  retain(
-    "compare_static_and_observed_endpoints",
-    projectEndpointComparisonView,
-  ),
-  retain("trace_application_feature", projectFeatureTraceView),
-  retain("batch_decompile", projectBatchDecompileView),
-  retain("inspect_artifact", projectArtifactInventoryView),
-  retain("inventory_artifact", projectArtifactInventoryView),
-  retain("analyze_web_bundle", projectWebBundleView),
-  retain("trace_web_source_location", projectWebSourceLocationView),
-]);
+);
 
 /** Budgets retained across source admission and the selected grouping projection. */
 export interface AnalysisViewAccumulators {
@@ -359,26 +271,16 @@ export const projectAnalysisView = (
   if (view.kind === "recorded-array") {
     return sealProjected(projectRecordedArrayView(parent, view));
   }
-  if (view.kind === "javascript-routes") {
-    const projected = projectJavaScriptRoutesView(parent, view);
-    return sealProjected(projected);
-  }
-  if (view.kind === "web-bundle") {
-    const projected = projectWebBundleView(parent, view);
-    return sealProjected(projected);
-  }
-  if (isGroupingView(view)) {
-    const grouped = projectGroupingView(parent, view, accumulators);
-    return sealProjected(grouped);
-  }
-  if (parent.operation === "inspect_web_network_capture") {
-    const projected = projectWebNetworkCaptureView(parent, view);
-    return sealProjected(projected);
-  }
-  if (parent.operation === "inspect_pcap_capture") {
-    const projected = projectPcapCaptureView(parent, view);
-    return sealProjected(projected);
-  }
+  if (view.kind === "javascript-routes")
+    return sealProjected(projectJavaScriptRoutesView(parent, view));
+  if (view.kind === "web-bundle")
+    return sealProjected(projectWebBundleView(parent, view));
+  if (isGroupingView(view))
+    return sealProjected(projectGroupingView(parent, view, accumulators));
+  if (parent.operation === "inspect_web_network_capture")
+    return sealProjected(projectWebNetworkCaptureView(parent, view));
+  if (parent.operation === "inspect_pcap_capture")
+    return sealProjected(projectPcapCaptureView(parent, view));
   if (parent.operation === "inspect_byte_entropy") {
     const report = readByteEntropyParent(parent);
     if (!report.ok) return report;
@@ -394,18 +296,14 @@ export const projectAnalysisView = (
   if (parent.operation === "analyze_javascript_application") {
     const analysis = readJavaScriptParent(parent);
     if (!analysis.ok) return analysis;
-    const projected = projectJavaScriptApplicationView(
-      parent,
-      analysis.value,
-      view,
+    return sealProjected(
+      projectJavaScriptApplicationView(parent, analysis.value, view),
     );
-    return sealProjected(projected);
   }
   if (parent.operation === "analyze_function") {
     const native = readFunctionDossierParent(parent);
     if (!native.ok) return native;
-    const projected = projectNativeFunctionView(parent, native.value, view);
-    return sealProjected(projected);
+    return sealProjected(projectNativeFunctionView(parent, native.value, view));
   }
   const project = retainedViewProjectors.get(parent.operation);
   if (project !== undefined) {
