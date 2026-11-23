@@ -16,6 +16,7 @@ import {
   unavailableViewCoverage,
 } from "./analysisViewCoverage.js";
 import { selectViewRows } from "./selectViewRows.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const atom = erlangBeamSchema.shape.atoms.unwrap().element;
 const exported = erlangBeamSchema.shape.exports.unwrap().element;
@@ -243,3 +244,9 @@ export const projectErlangBeamView = (
     ),
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const erlangBeamViewDeclarations = retainedView({
+  operations: ["inspect_erlang_beam"],
+  project: projectErlangBeamView,
+});

@@ -29,6 +29,7 @@ import {
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
 import { evidenceSubjectTarget } from "../evidence.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const identityFields = new Set([
   "id",
@@ -335,3 +336,9 @@ export const projectApkSignatureView = (
     coverage: pageViewCoverage(view.offset, items.length, total),
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const apkSignatureViewDeclarations = retainedView({
+  operations: ["inspect_apk_signature"],
+  project: projectApkSignatureView,
+});

@@ -33,6 +33,7 @@ import type { JsonValue } from "../jsonValue.js";
 import { jsonValueByteLength } from "../jsonValueByteLength.js";
 import { AnalysisResourceConstraintError } from "../analysisErrorCore.js";
 import { evidenceFileTarget } from "../evidence.js";
+import { retainedView } from "./viewDeclaration.js";
 export const gpuCodeObjectsViewRequestSchema = z.discriminatedUnion(
   "collection",
   [
@@ -419,3 +420,9 @@ export const projectGpuCodeObjectsView = (
     coverage: pageViewCoverage(view.offset, items.length, matches.length),
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const gpuCodeObjectsViewDeclarations = retainedView({
+  operations: ["inspect_gpu_code_objects"],
+  project: projectGpuCodeObjectsView,
+});

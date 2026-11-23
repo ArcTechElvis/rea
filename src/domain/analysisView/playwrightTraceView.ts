@@ -33,6 +33,7 @@ import {
 } from "./analysisViewCoverage.js";
 import { selectViewRows } from "./selectViewRows.js";
 import { analysisViewInputError } from "./analysisViewErrors.js";
+import { retainedView } from "./viewDeclaration.js";
 
 export const playwrightTraceViewContextSchema = playwrightTraceSchema
   .omit({
@@ -349,3 +350,9 @@ export const projectPlaywrightTraceView = (
     ),
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const playwrightTraceViewDeclarations = retainedView({
+  operations: ["inspect_playwright_trace"],
+  project: projectPlaywrightTraceView,
+});

@@ -19,6 +19,7 @@ import {
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
 import { selectViewRows } from "./selectViewRows.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const neededRow = elfDependenciesReportSchema.shape.needed.element;
 const importRow = elfDependenciesReportSchema.shape.imports.element;
@@ -364,3 +365,9 @@ export const projectElfDependenciesView = (
       );
   }
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const elfDependenciesViewDeclarations = retainedView({
+  operations: ["inspect_elf_dependencies"],
+  project: projectElfDependenciesView,
+});

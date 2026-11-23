@@ -20,6 +20,7 @@ import {
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
 import { selectViewRows } from "./selectViewRows.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const peRow = pe.shape.exports.element;
 const elfRow = elf.shape.exports.element;
@@ -234,3 +235,9 @@ export const projectNativeExportsView = (
     ),
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const nativeExportsViewDeclarations = retainedView({
+  operations: ["inspect_native_exports"],
+  project: projectNativeExportsView,
+});

@@ -13,6 +13,7 @@ import {
   boundedViewMessages,
   completeWithinViewCoverage,
 } from "./analysisViewCoverage.js";
+import { retainedView } from "./viewDeclaration.js";
 
 /** Package identity and counts; member rows and dependencies stay in the complete parent. */
 export const nugetNupkgSummarySchema = nugetNupkgSchema
@@ -86,3 +87,9 @@ export const projectNugetNupkgView = (
     coverage: completeWithinViewCoverage(report.contents.length),
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const nugetNupkgViewDeclarations = retainedView({
+  operations: ["inspect_nuget_nupkg"],
+  project: projectNugetNupkgView,
+});

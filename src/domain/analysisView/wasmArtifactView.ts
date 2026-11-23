@@ -22,6 +22,7 @@ import {
   analysisTextPageItemSchema,
 } from "./analysisViewText.js";
 import { evidenceSubjectTarget } from "../evidence.js";
+import { retainedView } from "./viewDeclaration.js";
 
 /** Source forms and text from completed WASM Evidence; this never executes a VM. */
 export const wasmViewRequestSchema = z.strictObject({
@@ -201,3 +202,9 @@ export const projectWasmArtifactView = (
     ...shared,
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const wasmArtifactViewDeclarations = retainedView({
+  operations: ["inspect_wasm_artifact"],
+  project: projectWasmArtifactView,
+});

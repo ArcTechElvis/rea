@@ -2,7 +2,19 @@ import type { AnalysisError } from "../analysisErrorBase.js";
 import type { Result } from "../result.js";
 import type { AnalysisViewParent } from "./analysisViewParent.js";
 import type { AdmittedView } from "./analysisViewShape.js";
-import type { UnsignedAnalysisView } from "./analysisViewResult.js";
+
+/**
+ * The unsigned view a projector returns.
+ *
+ * Deliberately structural rather than imported from `analysisViewResult.ts`:
+ * that module already imports every view module's request schema, so naming it
+ * here would close an import cycle through every projector
+ * (`analysisViewCycles.test.ts` holds that graph exact). A projector satisfies
+ * this by returning the object it already builds, so nothing is loosened.
+ */
+export interface ProjectedView {
+  readonly kind: string;
+}
 
 /**
  * A view module names its own subject.
@@ -21,7 +33,7 @@ import type { UnsignedAnalysisView } from "./analysisViewResult.js";
 export type RetainedProjector = (
   parent: AnalysisViewParent,
   view: AdmittedView,
-) => Result<UnsignedAnalysisView, AnalysisError>;
+) => Result<ProjectedView, AnalysisError>;
 
 /** Decode a parent's normalized result into the report this projector reads. */
 export type ParentReader<Report> = (
@@ -33,7 +45,7 @@ export type TypedProjector<Report> = (
   parent: AnalysisViewParent,
   report: Report,
   view: AdmittedView,
-) => Result<UnsignedAnalysisView, AnalysisError>;
+) => Result<ProjectedView, AnalysisError>;
 
 /** At least one operation, so a declaration can never route nothing. */
 export type Operations = readonly [string, ...string[]];

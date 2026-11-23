@@ -22,6 +22,7 @@ import {
   completeWithinViewCoverage,
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const page = {
   kind: z.literal("native-feature-trace"),
@@ -219,3 +220,9 @@ export const projectNativeFeatureTraceView = (
     }
   }
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const nativeFeatureTraceViewDeclarations = retainedView({
+  operations: ["trace_feature"],
+  project: projectNativeFeatureTraceView,
+});

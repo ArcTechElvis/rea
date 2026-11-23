@@ -26,6 +26,7 @@ import {
   analysisViewInputError,
 } from "./analysisViewErrors.js";
 import { createAnalysisViewResultReader } from "./analysisViewParent.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const PAGE_BYTES = 1024 * 1024;
 const DIGEST_BYTES = jsonValueByteLength({ view_digest: "0".repeat(64) }) - 1;
@@ -428,3 +429,9 @@ export const projectWebBundleView = (
     }),
   );
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const webBundleViewDeclarations = retainedView({
+  operations: ["analyze_web_bundle"],
+  project: projectWebBundleView,
+});

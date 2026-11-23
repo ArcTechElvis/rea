@@ -19,6 +19,7 @@ import {
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
 import { selectViewRows } from "./selectViewRows.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const mapping = sourceToBundleComparisonResultSchema.shape.items.element;
 const candidate = mapping.shape.candidates.element;
@@ -247,3 +248,9 @@ export const projectSourceToBundleView = (
     coverage: pageViewCoverage(view.offset, items.length, total),
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const sourceToBundleViewDeclarations = retainedView({
+  operations: ["compare_source_to_bundle"],
+  project: projectSourceToBundleView,
+});

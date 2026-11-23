@@ -27,6 +27,7 @@ import {
 } from "./analysisViewCoverage.js";
 import { analysisViewInputError } from "./analysisViewErrors.js";
 import { selectViewRows } from "./selectViewRows.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const count = z.number().int().nonnegative();
 
@@ -284,3 +285,9 @@ export const projectRustBinaryView = (
     ),
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const rustBinaryViewDeclarations = retainedView({
+  operations: ["inspect_rust_binary"],
+  project: projectRustBinaryView,
+});

@@ -26,6 +26,7 @@ import {
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
 import { evidenceFileTarget, evidenceSubjectDisplay } from "../evidence.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const page = {
   kind: z.literal("interface-builder"),
@@ -279,3 +280,9 @@ export const projectInterfaceBuilderView = (
     ),
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const interfaceBuilderViewDeclarations = retainedView({
+  operations: ["decode_interface_builder"],
+  project: projectInterfaceBuilderView,
+});

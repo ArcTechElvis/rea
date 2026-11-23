@@ -14,6 +14,7 @@ import {
 } from "./analysisViewCoverage.js";
 import { analysisViewInputError } from "./analysisViewErrors.js";
 import { createAnalysisViewResultReader } from "./analysisViewParent.js";
+import { retainedView } from "./viewDeclaration.js";
 
 export const fridaSessionStatusSummarySchema = fridaSessionStatusSchema
   .omit({ messages: true })
@@ -89,3 +90,9 @@ export const projectFridaSessionStatusView = (
     ],
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const fridaSessionStatusViewDeclarations = retainedView({
+  operations: ["frida_session_status"],
+  project: projectFridaSessionStatusView,
+});

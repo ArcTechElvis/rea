@@ -28,6 +28,7 @@ import {
   pageViewCoverage,
   unavailableViewCoverage,
 } from "./analysisViewCoverage.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const observation = nativeLoadImageObservationSchema.shape;
 const rows = {
@@ -325,3 +326,9 @@ export const projectNativeLoadImageView = (
         : pageViewCoverage(view.offset, page.rows.length, page.total),
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const nativeLoadImageViewDeclarations = retainedView({
+  operations: ["inspect_native_load_image"],
+  project: projectNativeLoadImageView,
+});

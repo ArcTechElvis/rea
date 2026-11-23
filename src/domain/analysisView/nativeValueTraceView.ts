@@ -13,6 +13,7 @@ import {
   boundedViewMessages,
   completeWithinViewCoverage,
 } from "./analysisViewCoverage.js";
+import { retainedView } from "./viewDeclaration.js";
 
 /** Counts and pagination state for a bounded native value trace page. */
 export const nativeValueTraceSummarySchema = z.strictObject({
@@ -93,3 +94,9 @@ export const projectNativeValueTraceView = (
     ),
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const nativeValueTraceViewDeclarations = retainedView({
+  operations: ["trace_native_values"],
+  project: projectNativeValueTraceView,
+});

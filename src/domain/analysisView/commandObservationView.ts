@@ -21,6 +21,7 @@ import {
 import { analysisViewInputError } from "./analysisViewErrors.js";
 import { createAnalysisViewResultReader } from "./analysisViewParent.js";
 import { isRecord } from "../../kernel/isRecord.js";
+import { retainedView } from "./viewDeclaration.js";
 
 export const commandSummaryContext = {
   source_provider: providerSchema.nullable(),
@@ -182,3 +183,9 @@ export const projectCommandObservationView = (
     summary: report,
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const commandObservationViewDeclarations = retainedView({
+  operations: ["gdb_console", "inspect_with_objdump"],
+  project: projectCommandObservationView,
+});

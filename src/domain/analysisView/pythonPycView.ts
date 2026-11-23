@@ -18,6 +18,7 @@ import {
   pageViewCoverage,
 } from "./analysisViewCoverage.js";
 import { selectViewRows } from "./selectViewRows.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const code = pythonPycSchema.shape.code_objects.element;
 
@@ -139,3 +140,9 @@ export const projectPythonPycView = (
     ),
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const pythonPycViewDeclarations = retainedView({
+  operations: ["inspect_python_pyc"],
+  project: projectPythonPycView,
+});

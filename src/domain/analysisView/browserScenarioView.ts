@@ -38,6 +38,7 @@ import {
   browserScenarioTransactionGroups,
   summarizeBrowserScenarioNetwork,
 } from "./browserScenarioNetworkView.js";
+import { retainedView } from "./viewDeclaration.js";
 
 const OPERATION = "capture_browser_scenario" as const;
 const readCapture = createAnalysisViewResultReader(
@@ -403,3 +404,9 @@ export const projectBrowserScenarioView = (
     ...page.value,
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const browserScenarioViewDeclarations = retainedView({
+  operations: ["capture_browser_scenario"],
+  project: projectBrowserScenarioView,
+});

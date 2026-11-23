@@ -24,6 +24,7 @@ import {
 } from "./analysisViewShape.js";
 import { ok, err } from "../result.js";
 import { evidenceFileTarget } from "../evidence.js";
+import { retainedView } from "./viewDeclaration.js";
 
 // Bound diagnostic context independently of the retained report size. Previews
 // are display values; stable file IDs select the original paths and all issues.
@@ -350,3 +351,9 @@ export const projectDesktopApplicationView = (
     coverage: pageViewCoverage(view.offset, items.length, rows.length),
   });
 };
+
+/** Declared view subject, folded into the registry by the view owner. */
+export const desktopApplicationViewDeclarations = retainedView({
+  operations: ["inspect_desktop_application"],
+  project: projectDesktopApplicationView,
+});
