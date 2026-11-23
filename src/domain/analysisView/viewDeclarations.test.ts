@@ -2,108 +2,14 @@ import { describe, expect, it } from "vitest";
 import { retainedView } from "./viewDeclaration.js";
 import type { ViewDeclaration } from "./viewDeclaration.js";
 import { foldViewDeclarations } from "./viewRegistry.js";
-import { androidJniViewDeclarations } from "./androidJniView.js";
-import { androidPackageViewDeclarations } from "./androidPackageView.js";
-import { androidSymbolViewDeclarations } from "./androidSymbolView.js";
-import { apiContractViewDeclarations } from "./apiContractView.js";
-import { apkSignatureViewDeclarations } from "./apkSignatureView.js";
-import {
-  artifactInventoryViewDeclarations,
-  il2cppMetadataViewDeclarations,
-} from "./viewDeclarationsAtBudget.js";
-import { batchDecompileViewDeclarations } from "./batchDecompileView.js";
-import { browserScenarioViewDeclarations } from "./browserScenarioView.js";
-import { commandObservationViewDeclarations } from "./commandObservationView.js";
-import { dartAotViewDeclarations } from "./dartAotView.js";
-import { desktopApplicationViewDeclarations } from "./desktopApplicationView.js";
-import { devicetreeViewDeclarations } from "./devicetreeView.js";
-import { elfDependenciesViewDeclarations } from "./elfDependenciesView.js";
-import { endpointComparisonViewDeclarations } from "./endpointComparisonView.js";
-import { erlangBeamViewDeclarations } from "./erlangBeamView.js";
-import { evmInterfaceViewDeclarations } from "./evmInterfaceView.js";
-import { featureTraceViewDeclarations } from "./featureTraceView.js";
-import { fridaSessionStatusViewDeclarations } from "./fridaSessionStatusView.js";
-import { goBinaryViewDeclarations } from "./goBinaryView.js";
-import { gpuCodeObjectsViewDeclarations } from "./gpuCodeObjectsView.js";
-import { interfaceBuilderViewDeclarations } from "./interfaceBuilderView.js";
-import { machoViewDeclarations } from "./machoView.js";
-import { managedArtifactViewDeclarations } from "./managedArtifactView.js";
-import { managedMemberViewDeclarations } from "./managedMemberView.js";
-import { modelArtifactViewDeclarations } from "./modelArtifactView.js";
-import { nativeExportsViewDeclarations } from "./nativeExportsView.js";
-import { nativeFeatureTraceViewDeclarations } from "./nativeFeatureTraceView.js";
-import { nativeFunctionMatchingViewDeclarations } from "./nativeFunctionMatchingView.js";
-import { nativeInstructionReferencesViewDeclarations } from "./nativeInstructionReferencesView.js";
-import { nativeLoadImageViewDeclarations } from "./nativeLoadImageView.js";
-import { nativeProcedureReferencesViewDeclarations } from "./nativeProcedureReferencesView.js";
-import { nativeValueTraceViewDeclarations } from "./nativeValueTraceView.js";
-import { nugetNupkgViewDeclarations } from "./nugetNupkgView.js";
-import { playwrightTraceViewDeclarations } from "./playwrightTraceView.js";
-import { procedurePseudocodeViewDeclarations } from "./procedurePseudocodeView.js";
-import { pythonPycViewDeclarations } from "./pythonPycView.js";
-import { rustBinaryViewDeclarations } from "./rustBinaryView.js";
-import { sourceToBundleViewDeclarations } from "./sourceToBundleView.js";
-import { wasmArtifactViewDeclarations } from "./wasmArtifactView.js";
-import { webBundleViewDeclarations } from "./webBundleView.js";
-import { webSourceLocationViewDeclarations } from "./webSourceLocationView.js";
-
-/**
- * The declarations each view module now owns, collected in one place.
- *
- * This list is the fail-closed half of the migration: `analysisView.ts` still
- * builds its projector map by hand, and this test asserts the declarations
- * describe exactly the same operations. A view added to one and not the other
- * fails here instead of drifting silently until step 3.
- */
-export const DECLARED_VIEWS: readonly ViewDeclaration[] = [
-  androidJniViewDeclarations,
-  androidPackageViewDeclarations,
-  androidSymbolViewDeclarations,
-  apiContractViewDeclarations,
-  apkSignatureViewDeclarations,
-  artifactInventoryViewDeclarations,
-  batchDecompileViewDeclarations,
-  browserScenarioViewDeclarations,
-  commandObservationViewDeclarations,
-  dartAotViewDeclarations,
-  desktopApplicationViewDeclarations,
-  devicetreeViewDeclarations,
-  elfDependenciesViewDeclarations,
-  endpointComparisonViewDeclarations,
-  erlangBeamViewDeclarations,
-  evmInterfaceViewDeclarations,
-  featureTraceViewDeclarations,
-  fridaSessionStatusViewDeclarations,
-  goBinaryViewDeclarations,
-  gpuCodeObjectsViewDeclarations,
-  il2cppMetadataViewDeclarations,
-  interfaceBuilderViewDeclarations,
-  machoViewDeclarations,
-  managedArtifactViewDeclarations,
-  managedMemberViewDeclarations,
-  modelArtifactViewDeclarations,
-  nativeExportsViewDeclarations,
-  nativeFeatureTraceViewDeclarations,
-  nativeFunctionMatchingViewDeclarations,
-  nativeInstructionReferencesViewDeclarations,
-  nativeLoadImageViewDeclarations,
-  nativeProcedureReferencesViewDeclarations,
-  nativeValueTraceViewDeclarations,
-  nugetNupkgViewDeclarations,
-  playwrightTraceViewDeclarations,
-  procedurePseudocodeViewDeclarations,
-  pythonPycViewDeclarations,
-  rustBinaryViewDeclarations,
-  sourceToBundleViewDeclarations,
-  wasmArtifactViewDeclarations,
-  webBundleViewDeclarations,
-  webSourceLocationViewDeclarations,
-];
+import { DECLARED_VIEWS } from "./viewDeclarations.js";
 
 /**
  * The operation strings `retainedViewProjectors` in `analysisView.ts` registers
- * by hand today. Kept here as the reference the declarations must match; step 3
- * deletes this list along with the hand-written map.
+ * today: 45 literal `retain(...)` calls plus the eleven operations spread from
+ * `NATIVE_OBSERVATION_OPERATIONS` (6) and `NATIVE_INVENTORY_OPERATIONS` (5).
+ * Kept here as the reference the declarations must match; step 3 deletes this
+ * list along with the hand-written map.
  */
 const HAND_REGISTERED_OPERATIONS = [
   "procedure_pseudo_code",
@@ -151,6 +57,19 @@ const HAND_REGISTERED_OPERATIONS = [
   "inventory_artifact",
   "analyze_web_bundle",
   "trace_web_source_location",
+  // NATIVE_OBSERVATION_OPERATIONS
+  "procedure_address",
+  "procedure_callees",
+  "procedure_callers",
+  "resolve_containing_procedure",
+  "get_call_graph",
+  "xrefs",
+  // NATIVE_INVENTORY_OPERATIONS
+  "list_procedures",
+  "search_procedures",
+  "list_strings",
+  "search_strings",
+  "list_names",
 ] as const;
 
 const operationsOf = (
@@ -221,9 +140,9 @@ describe("declaration shape", () => {
     }
   });
 
-  it("collects 42 modules serving 45 operations", () => {
-    expect(DECLARED_VIEWS).toHaveLength(42);
-    expect(operationsOf(DECLARED_VIEWS)).toHaveLength(45);
+  it("collects 44 modules serving 56 operations", () => {
+    expect(DECLARED_VIEWS).toHaveLength(44);
+    expect(operationsOf(DECLARED_VIEWS)).toHaveLength(56);
   });
 
   it("rejects a duplicate declaration at fold time", () => {

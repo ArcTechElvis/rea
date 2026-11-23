@@ -1,3 +1,4 @@
+import { retainedView } from "./viewDeclaration.js";
 import { z } from "zod";
 import { analysisStringSchema } from "../native/nativeString.js";
 import { inventoryDiscoveryCoverageSchema } from "../native/inventoryCoverage.js";
@@ -5,6 +6,7 @@ import { jsonValueSchema } from "../jsonValue.js";
 import {
   addressedValueSchema,
   isNativeInventoryOperation,
+  NATIVE_INVENTORY_OPERATIONS,
   type NativeInventoryOperation,
 } from "../native/nativeInventory.js";
 import {
@@ -177,3 +179,9 @@ export const projectNativeInventoryView = (
     coverage: pageViewCoverage(view.offset, selected.length, rows.length),
   });
 };
+
+/** Owner-declared view subject, folded into the registry. */
+export const nativeInventoryViewDeclarations = retainedView({
+  operations: [...NATIVE_INVENTORY_OPERATIONS],
+  project: projectNativeInventoryView,
+});
